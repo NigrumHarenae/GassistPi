@@ -32,7 +32,7 @@ read -r -p "Enter the your Google Cloud Console Project-Id: " projid
 echo ""
 read -r -p "Enter the modelid that was generated in the actions console: " modelid
 echo ""
-echo "Your Model-Id used for the project is: $modelid" >> /home/${USER}/modelid.txt
+echo "Your Model-Id used for the project is: $modelid" >> /home/pi/modelid.txt
 
 sudo apt-get update -y
 sed 's/#.*//' ${GIT_DIR}/Requirements/GassistPi-system-requirements.txt | xargs sudo apt-get install -y
@@ -138,11 +138,11 @@ if [[ $osversion != "Raspbian Stretch" ]];then
   echo ""
   echo "==========Installing Swig========="
   echo ""
-  if [ ! -d /home/${USER}/programs/libraries/swig/ ]; then
+  if [ ! -d /home/pi/programs/libraries/swig/ ]; then
     sudo mkdir -p programs/libraries/ && cd programs/libraries
     sudo git clone https://github.com/swig/swig.git
   fi
-  cd /home/${USER}/programs/libraries/swig/
+  cd /home/pi/programs/libraries/swig/
   sudo ./autogen.sh
   sudo ./configure
   sudo make
@@ -151,13 +151,13 @@ if [[ $osversion != "Raspbian Stretch" ]];then
   echo "==========Compiling custom Snowboy Python3 wrapper=========="
   echo ""
   cd ~/programs
-  if [ ! -d /home/${USER}/programs/snowboy/ ]; then
+  if [ ! -d /home/pi/programs/snowboy/ ]; then
     sudo git clone https://github.com/Kitt-AI/snowboy.git
   fi
-  cd /home/${USER}/programs/snowboy/swig/Python3
+  cd /home/pi/programs/snowboy/swig/Python3
   sudo make
 
-  if [ -e /home/${USER}/programs/snowboy/swig/Python3/_snowboydetect.so ]; then
+  if [ -e /home/pi/programs/snowboy/swig/Python3/_snowboydetect.so ]; then
     echo "=========Copying Snowboy files to GassistPi directory=========="
     sudo \cp -f ./_snowboydetect.so ${GIT_DIR}/src/_snowboydetect.so
     sudo \cp -f ./snowboydetect.py ${GIT_DIR}/src/snowboydetect.py
@@ -166,7 +166,7 @@ if [[ $osversion != "Raspbian Stretch" ]];then
   fi
 fi
 
-cd /home/${USER}/
+cd /home/pi/
 echo ""
 echo ""
 echo "==========Changing particulars in service files=========="
@@ -186,7 +186,7 @@ else
   sed -i 's/created-project-id/'$projid'/g' ${GIT_DIR}/systemd/gassistpi.service
 fi
 
-sed -i 's/__USER__/'${USER}'/g' ${GIT_DIR}/systemd/gassistpi.service
+sed -i 's/__USER__/'pi'/g' ${GIT_DIR}/systemd/gassistpi.service
 
 python3 -m venv env
 env/bin/python -m pip install --upgrade pip setuptools wheel
